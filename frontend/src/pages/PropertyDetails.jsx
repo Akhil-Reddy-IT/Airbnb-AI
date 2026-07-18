@@ -214,6 +214,32 @@ const PropertyDetails = () => {
             </div>
           </div>
 
+          {/* Map Location Section */}
+          <div className="space-y-4 pt-8 border-t border-border-main/50 text-left">
+            <h3 className="font-bold text-sm text-text-main uppercase tracking-wider text-text-muted">
+              Where you'll be
+            </h3>
+            <p className="text-xs text-text-main font-semibold flex items-center gap-1.5">
+              <FaMapMarkerAlt className="text-primary" />
+              {property.location.street ? `${property.location.street}, ` : ''}
+              {property.location.city}, {property.location.state ? `${property.location.state}, ` : ''}
+              {property.location.country}
+            </p>
+            <div className="w-full h-80 rounded-2xl overflow-hidden border border-border-main shadow-sm">
+              <iframe
+                title="Google Map Location"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                loading="lazy"
+                allowFullScreen
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(
+                  `${property.location.street || ''} ${property.location.city} ${property.location.country}`
+                )}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
+              ></iframe>
+            </div>
+          </div>
+
           {/* Gemini reviews summarizer */}
           <div className="pt-8 border-t border-border-main/50">
             <ReviewSummaryWidget propertyId={property._id} reviewsCount={reviews.length} />
