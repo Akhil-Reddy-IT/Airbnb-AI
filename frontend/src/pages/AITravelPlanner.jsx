@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import api from '../utils/api.js';
+import { Link } from 'react-router-dom';
 import { FaRobot, FaMagic, FaCalendarAlt, FaMapMarkedAlt, FaDollarSign, FaLightbulb } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -12,10 +13,30 @@ const AITravelPlanner = () => {
   const [plan, setPlan] = useState(null);
   const [error, setError] = useState('');
 
+  // Recommended Stays States
+  const [matchingStays, setMatchingStays] = useState([]);
+  const [loadingStays, setLoadingStays] = useState(false);
+
+  const fetchMatchingStays = async (cityName) => {
+    setLoadingStays(true);
+    try {
+      const res = await api.get(`/properties?city=${encodeURIComponent(cityName)}`);
+      if (res.data.success) {
+        // Limit to top 4 recommendations
+        setMatchingStays(res.data.properties.slice(0, 4));
+      }
+    } catch (err) {
+      console.error('Error loading properties for planner:', err.message);
+    } finally {
+      setLoadingStays(false);
+    }
+  };
+
   const handleGeneratePlan = async (e) => {
     e.preventDefault();
     setError('');
     setPlan(null);
+    setMatchingStays([]);
 
     if (!destination.trim() || !budget || !days) {
       setError('Please fill in Destination, Budget, and Days count.');
@@ -32,6 +53,10 @@ const AITravelPlanner = () => {
 
       if (res.data.success) {
         setPlan(res.data.itinerary);
+        
+        // Extract city (first token before comma) and fetch matching stays
+        const cityName = destination.split(',')[0].trim();
+        fetchMatchingStays(cityName);
       }
     } catch (err) {
       setError('Failed to generate itinerary. Please try again.');
@@ -41,7 +66,7 @@ const AITravelPlanner = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-6 md:px-12 py-8 space-y-8 text-left select-none">
+    <div className="max-w-7xl mx-auto px-6 md:px-12 py-8 space-y-8 text-left select-none">
       {/* Title */}
       <section className="text-center space-y-3">
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-bold text-primary tracking-wider uppercase font-mono">
@@ -51,7 +76,7 @@ const AITravelPlanner = () => {
           AI Travel Planner
         </h1>
         <p className="text-xs md:text-sm text-text-muted max-w-md mx-auto">
-          Input your next destination and budget, and let Gemini compile a custom day-by-day travel itinerary with budget allocations and tourist highlights.
+          Input your next destination and budget, and let Gemini compile a custom day-by-day travel itinerary along with matching local property rentals.
         </p>
       </section>
 
@@ -71,7 +96,7 @@ const AITravelPlanner = () => {
               <input
                 type="text"
                 required
-                placeholder="e.g. Manali, India"
+                placeholder="e.g. Goa, Manali, Shimla"
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
                 className="glass-input text-xs"
@@ -154,6 +179,50 @@ const AITravelPlanner = () => {
                   <p className="text-xs text-text-muted mt-1 leading-relaxed bg-bg-main/50 p-2.5 rounded-lg border border-border-main/50">
                     <span className="font-bold text-text-main">Estimated Expenses:</span> {plan.totalEstimatedExpense}
                   </p>
+                </div>
+
+                {/* Recommended Stays Section */}
+                <div className="border border-border-main p-5 rounded-2xl bg-bg-card glass-effect glow-card space-y-4">
+                  <h3 className="font-bold text-xs uppercase tracking-wider text-text-muted flex items-center gap-1.5">
+                    🏨 Recommended Stays in {destination.split(',')[0]}
+                  </h3>
+                  
+                  {loadingStays ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 animate-pulse">
+                      <div className="h-20 bg-border-main rounded-lg"></div>
+                      <div className="h-20 bg-border-main rounded-lg"></div>
+                    </div>
+                  ) : matchingStays.length === 0 ? (
+                    <p className="text-xs text-text-muted italic bg-bg-main/30 p-4 rounded-xl">
+                      No registered listings found in {destination.split(',')[0]} right now. Expand your search or check other cities!
+                    </p>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {matchingStays.map((p) => (
+                        <Link
+                          key={p._id}
+                          to={`/properties/${p._id}`}
+                          className="border border-border-main/50 p-2 rounded-xl bg-bg-main/10 hover:bg-primary/5 hover:border-primary/30 flex gap-3 hover:scale-101 transition-all cursor-pointer"
+                        >
+                          <img
+                            src={p.images[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6'}
+                            alt={p.title}
+                            className="w-16 h-16 rounded-lg object-cover shrink-0"
+                          />
+                          <div className="text-left flex-1 min-w-0 flex flex-col justify-between">
+                            <div>
+                              <h4 className="text-[11px] font-bold text-text-main truncate">{p.title}</h4>
+                              <p className="text-[9px] text-text-muted truncate mt-0.5">{p.propertyType} • {p.location.city}</p>
+                            </div>
+                            <div className="flex justify-between items-center mt-1">
+                              <span className="text-[11px] font-bold text-primary">₹{p.price}/night</span>
+                              <span className="text-[9px] text-text-muted hover:text-primary underline">View Details</span>
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Day-by-Day schedule list */}
