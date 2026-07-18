@@ -25,16 +25,12 @@ const Navbar = () => {
     <nav className="sticky top-0 z-40 w-full border-b border-border-main glass-effect shadow-sm py-4 px-6 md:px-12 flex justify-between items-center">
       {/* Brand Logo */}
       <Link to="/" className="flex items-center gap-2 cursor-pointer">
-        <motion.div
-          animate={{ rotate: [0, 10, -10, 0] }}
-          transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
-          className="text-primary text-3xl font-bold flex items-center gap-1.5"
-        >
+        <div className="text-primary text-3xl font-bold flex items-center gap-1.5">
           <span className="font-extrabold tracking-tight">Airbnb</span>
           <span className="bg-primary text-white text-xs px-2 py-0.5 rounded-md font-mono flex items-center gap-1">
             <FaRobot /> AI
           </span>
-        </motion.div>
+        </div>
       </Link>
 
       {/* Navigation Links / Central search shortcut */}
