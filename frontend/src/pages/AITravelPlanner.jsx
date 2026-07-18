@@ -96,11 +96,17 @@ const AITravelPlanner = () => {
               <input
                 type="text"
                 required
+                list="destinations-list"
                 placeholder="e.g. Goa, Manali, Shimla"
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
                 className="glass-input text-xs"
               />
+              <datalist id="destinations-list">
+                {['Goa', 'Munnar', 'Bangalore', 'Manali', 'Mumbai', 'Jaipur', 'Udaipur', 'Srinagar', 'Ooty', 'Kochi', 'New Delhi', 'Shimla', 'Rishikesh', 'Pondicherry', 'Darjeeling'].map((dest) => (
+                  <option key={dest} value={dest} />
+                ))}
+              </datalist>
             </div>
 
             {/* Budget */}
