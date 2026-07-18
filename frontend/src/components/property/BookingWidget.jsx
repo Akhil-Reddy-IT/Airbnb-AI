@@ -114,7 +114,12 @@ const BookingWidget = ({ property }) => {
       {/* Price Header */}
       <div className="flex justify-between items-center pb-2 border-b border-border-main/50">
         <div>
-          <span className="text-xl font-bold text-text-main">₹{property.price}</span>
+          <span className="text-xl font-bold text-text-main">
+            ₹{property.price.toLocaleString('en-IN')}{' '}
+            <span className="text-sm text-text-muted font-normal">
+              (${Math.round(property.price / 83)})
+            </span>
+          </span>
           <span className="text-xs text-text-muted"> / night</span>
         </div>
         {property.ratings?.average > 0 && (
@@ -187,9 +192,11 @@ const BookingWidget = ({ property }) => {
           <div className="space-y-2 pt-2 border-t border-border-main/50 text-xs">
             <div className="flex justify-between text-text-muted">
               <span>
-                ₹{property.price} x {nightsCount} nights
+                ₹{property.price.toLocaleString('en-IN')} (${Math.round(property.price / 83)}) x {nightsCount} nights
               </span>
-              <span>₹{basePrice}</span>
+              <span>
+                ₹{basePrice.toLocaleString('en-IN')} (${Math.round(basePrice / 83)})
+              </span>
             </div>
             <div className="flex justify-between text-text-muted">
               <span>AirbnbAI service fee (8%)</span>
@@ -197,7 +204,9 @@ const BookingWidget = ({ property }) => {
             </div>
             <div className="flex justify-between text-text-main font-bold border-t border-border-main pt-2">
               <span>Total before taxes</span>
-              <span className="text-primary">₹{totalPrice}</span>
+              <span className="text-primary">
+                ₹{totalPrice.toLocaleString('en-IN')} (${Math.round(totalPrice / 83)})
+              </span>
             </div>
           </div>
         )}

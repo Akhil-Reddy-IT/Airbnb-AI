@@ -91,7 +91,10 @@ const PropertyCard = ({ property, isInitiallyWishlisted = false, onWishlistToggl
           {/* Pricing bottom */}
           <div className="mt-auto border-t border-border-main/50 pt-2 flex items-center justify-between">
             <p className="text-sm font-semibold text-text-main">
-              ₹{property.price}{' '}
+              ₹{property.price.toLocaleString('en-IN')}{' '}
+              <span className="text-[11px] text-text-muted font-normal">
+                (${Math.round(property.price / 83)})
+              </span>{' '}
               <span className="text-[11px] font-normal text-text-muted">/ night</span>
             </p>
             {!property.isApproved && (

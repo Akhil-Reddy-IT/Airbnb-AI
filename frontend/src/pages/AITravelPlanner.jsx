@@ -111,9 +111,9 @@ const AITravelPlanner = () => {
 
             {/* Budget */}
             <div className="flex flex-col gap-1">
-              <label className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Budget (INR / ₹)</label>
-              <div className="relative">
-                <FaDollarSign className="absolute left-3 top-3 text-text-muted text-xs" />
+              <label className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Budget (INR / ₹ & USD / $)</label>
+              <div className="relative flex items-center">
+                <span className="absolute left-3 text-text-muted text-xs font-bold">₹</span>
                 <input
                   type="number"
                   required
@@ -121,9 +121,14 @@ const AITravelPlanner = () => {
                   placeholder="15000"
                   value={budget}
                   onChange={(e) => setBudget(e.target.value)}
-                  className="glass-input text-xs pl-8.5 w-full"
+                  className="glass-input text-xs pl-6.5 w-full"
                 />
               </div>
+              {budget && (
+                <p className="text-[9px] text-text-muted italic mt-0.5">
+                  Equivalent to: ${(Number(budget) / 83).toFixed(1)} USD
+                </p>
+              )}
             </div>
 
             {/* Days */}
@@ -221,7 +226,9 @@ const AITravelPlanner = () => {
                               <p className="text-[9px] text-text-muted truncate mt-0.5">{p.propertyType} • {p.location.city}</p>
                             </div>
                             <div className="flex justify-between items-center mt-1">
-                              <span className="text-[11px] font-bold text-primary">₹{p.price}/night</span>
+                              <span className="text-[10px] font-bold text-primary">
+                                ₹{p.price.toLocaleString('en-IN')} (${Math.round(p.price / 83)})/night
+                              </span>
                               <span className="text-[9px] text-text-muted hover:text-primary underline">View Details</span>
                             </div>
                           </div>

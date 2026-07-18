@@ -135,7 +135,12 @@ const Bookings = () => {
                 <div className="md:col-span-1 text-right space-y-3 shrink-0">
                   <div>
                     <p className="text-xs text-text-muted">Total Paid</p>
-                    <p className="text-lg font-bold text-primary">₹{booking.totalPrice}</p>
+                    <p className="text-lg font-bold text-primary">
+                      ₹{booking.totalPrice.toLocaleString('en-IN')}{' '}
+                      <span className="text-xs text-text-muted font-normal">
+                        (${Math.round(booking.totalPrice / 83)})
+                      </span>
+                    </p>
                   </div>
 
                   <div className="flex flex-col gap-1.5 justify-end">
