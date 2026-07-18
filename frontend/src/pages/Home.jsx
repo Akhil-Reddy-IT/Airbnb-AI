@@ -142,7 +142,7 @@ const Home = () => {
             <FaMagic /> AI-Powered Vacation Stays
           </span>
           <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-text-main leading-tight max-w-2xl mx-auto">
-            Find Your Dream Escape with <span className="text-primary">Gemini Intelligence</span>
+            Find Stays Smarter with <span className="text-primary">Gemini AI</span>
           </h1>
           <p className="text-sm md:text-base text-text-muted max-w-lg mx-auto">
             Search naturally, draft booking summaries, and consult property-trained chatbot assistants instantly.
